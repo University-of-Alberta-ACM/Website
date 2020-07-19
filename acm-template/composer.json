@@ -1,0 +1,61 @@
+{
+  "name": "acm-theme",
+  "description": "Barebones modular WordPress theme",
+  "type": "wordpress-theme",
+  "require": {
+    "yahnis-elsts/plugin-update-checker": "^4.3"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^2.0",
+    "wp-coding-standards/wpcs": "0.11.0"
+  },
+  "authors": [
+    {
+      "name": "Nolte",
+      "email": "devs@wearenolte.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Fashion\\": "src/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@set-up-php-lint",
+      "@build-deps"
+    ],
+    "post-update-cmd": [
+      "@set-up-php-lint",
+      "@build-deps"
+    ],
+    "build-deps": [
+      "cd patterns && npm install"
+    ],
+    "build-app": [
+      "cd patterns && npm run build",
+      "@update-version"
+    ],
+    "build": [
+      "@build-deps",
+      "@build-app"
+    ],
+    "set-up-php-lint": [
+      "phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs/",
+      "phpcs --config-set default_standard ./codesniffer.ruleset.xml",
+      "phpcs --config-set show_progress 0",
+      "phpcs --config-set colors 1",
+      "phpcs --config-set ignore_warnings_on_exit 1"
+    ],
+    "lint": [
+      "@php-lint",
+      "cd patterns && npm run lint"
+    ],
+    "update-version": [
+      "version"
+    ],
+    "php-lint": [
+      "phpcs *.php src/*.php **/*.php src/**/**/*.php --ignore=vendor,src/Tgm.php"
+    ]
+  }
+}
